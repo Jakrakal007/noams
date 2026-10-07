@@ -40,13 +40,35 @@ Las pruebas utilizan Pytest y HTTPX. El motor aplica criterios determinísticos 
 
 ## Vista del sistema
 
-La interfaz integra un dashboard, carga de archivos, historial de análisis, resultados persistidos, detalle de hallazgos y catálogo de reglas.
+### Panel principal
 
-<!--
-![Dashboard de NOAMS](screenshots/dashboard-demo.png)
-![Resultados de análisis](screenshots/analysis-findings-demo.png)
-![Evidencia de un hallazgo](screenshots/finding-evidence-demo.png)
--->
+Métricas de análisis, registros, hallazgos e impacto, con acceso a una nueva carga CSV o XLSX.
+
+![Panel principal de NOAMS](screenshots/Inicio.png)
+
+### Historial de análisis
+
+Consulta de ejecuciones guardadas, con filtros por nombre de archivo y estado y acceso al resumen.
+
+![Historial de análisis de NOAMS](screenshots/Analisis.png)
+
+### Resumen de ejecución
+
+Resultado del archivo histórico de ejemplo: tres registros válidos, sin errores ni hallazgos.
+
+![Resumen de la ejecución histórica sin hallazgos](screenshots/Resumen.png)
+
+### Reglas
+
+Catálogo con activación, configuración actual y estadísticas de ejecución por regla.
+
+![Catálogo y configuración de reglas de NOAMS](screenshots/Reglas%201.png)
+
+### Configuración y datos de demostración
+
+Preferencias de apariencia e idioma y acceso al reinicio de los registros de la demo.
+
+![Configuración y reinicio de datos de demostración](screenshots/Configuracion.png)
 
 ## Arquitectura
 
