@@ -1,0 +1,33 @@
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div><strong>NOAMS</strong><p>Non-Compliance &amp;<br>Anomaly Monitoring System</p></div>
+  </div>
+  <nav class="sidebar-nav" aria-label="Main navigation" data-i18n-aria-label="nav.main">
+    <a class="sidebar-link{% if active_page == 'dashboard' %} active{% endif %}" href="/"{% if active_page == 'dashboard' %} aria-current="page"{% endif %}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M8 12h8M12 8v8"></path></svg>
+      <span data-i18n="nav.dashboard">Dashboard</span>
+    </a>
+    <a class="sidebar-link{% if active_page == 'analysis' %} active{% endif %}" href="/analysis"{% if active_page == 'analysis' %} aria-current="page"{% endif %}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M8 12h8M12 8v8"></path></svg>
+      <span data-i18n="nav.analysis">Analysis</span>
+    </a>
+<a class="sidebar-link disabled" href="#" aria-disabled="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M8 12h8M12 8v8"></path></svg>
+      <span data-i18n="nav.investigations">Investigations</span>
+    </a>
+<a class="sidebar-link disabled" href="#" aria-disabled="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M8 12h8M12 8v8"></path></svg>
+      <span data-i18n="nav.suppliers">Suppliers</span>
+    </a>
+    <a class="sidebar-link{% if active_page == 'rules' %} active{% endif %}" href="/rules"{% if active_page == 'rules' %} aria-current="page"{% endif %}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M8 12h8M12 8v8"></path></svg>
+      <span data-i18n="nav.rules">Rules</span>
+    </a>
+    <button class="sidebar-link settings-trigger" type="button" aria-haspopup="dialog" aria-expanded="false" data-settings-open>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M8 12h8M12 8v8"></path></svg>
+      <span data-i18n="nav.settings">Settings</span>
+    </button>
+  </nav>
+  <div class="sidebar-version"><strong>NOAMS v0.1.0</strong><span><span data-i18n="nav.environment">Environment</span>: {{ environment }}</span></div>
+</aside>

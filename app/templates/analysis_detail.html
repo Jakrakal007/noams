@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ analysis.filename }} | {{ app_name }}{% endblock %}
+{% block content %}
+<div class="app-shell">
+  {% include "_sidebar.html" %}
+  <div class="workspace">
+    <header class="topbar">
+      <div><span class="workspace-title" data-i18n="top.operations">Operations Center</span><p data-i18n="top.monitoring">Risk &amp; Anomaly Monitoring</p></div>
+      <div class="system-status"><span></span><span data-i18n="top.operational">System operational</span></div>
+    </header>
+    <main class="dashboard-main analysis-page">
+      <div class="detail-breadcrumb"><a href="/analysis" data-i18n="nav.analysis">Analysis</a><span>/</span><span>{{ analysis.filename }}</span></div>
+      <section class="result-card persisted-result">
+        <div class="result-heading">
+          <div>
+            <p class="eyebrow" data-i18n="{% if analysis.status == 'failed' %}result.failed{% elif analysis.status == 'completed_with_findings' %}result.with_findings{% else %}result.completed{% endif %}">{% if analysis.status == 'failed' %}Processing Failed{% elif analysis.status == 'completed_with_findings' %}Completed With Findings{% else %}Processing Completed{% endif %}</p>
+            <h1 data-i18n="result.summary">Run Summary</h1>
+          </div>
+          <span class="status-pill history-status-{{ analysis.status }}" data-i18n-dynamic="status" data-i18n-value="{{ analysis.status }}">{{ analysis.status.replace('_', ' ')|title }}</span>
+        </div>
+        <dl class="result-grid">
+          <div><dt data-i18n="common.file">File</dt><dd>{{ analysis.filename }}</dd></div>
+          <div><dt data-i18n="common.records">Records</dt><dd>{{ analysis.total_records }}</dd></div>
+          <div><dt data-i18n="common.valid">Valid</dt><dd>{{ analysis.valid_records }}</dd></div>
+          <div><dt data-i18n="common.invalid">Invalid</dt><dd>{{ analysis.invalid_records }}</dd></div>
+          <div><dt data-i18n="result.processing_time">Processing Time</dt><dd>{{ analysis.processing_time_ms }} ms</dd></div>
+        </dl>
+
+        {% if analysis.errors %}
+        <div id="errors-section"><h3 data-i18n="result.validation_errors">Validation Errors</h3><div class="table-wrap"><table><thead><tr><th data-i18n="common.row">Row</th><th data-i18n="common.column">Column</th><th data-i18n="common.description">Description</th></tr></thead><tbody>
+          {% for error in analysis.errors %}<tr><td>{{ error.row }}</td><td>{{ error.column }}</td><td data-i18n-dynamic="validation" data-i18n-value="{{ error.message }}">{{ error.message }}</td></tr>{% endfor %}
+        </tbody></table></div></div>
+        {% else %}<p class="no-errors" data-i18n="result.no_errors">No validation errors were found.</p>{% endif %}
+
+        <section class="findings-result">
+          <div class="findings-title"><div><p class="eyebrow" data-i18n="result.deterministic">Deterministic Rules</p><h3 data-i18n="result.findings">Findings Detected</h3></div><strong>{{ analysis.findings|length }}</strong></div>
+          {% if analysis.findings %}<div class="findings-list">
+          {% for finding in analysis.findings %}
+            <article class="finding-card" data-severity="{{ finding.severity }}">
+              <div class="finding-card-head"><div><h4 data-i18n-dynamic="rule" data-i18n-value="{{ finding.rule_code }}">{{ finding.title }}</h4><p data-i18n-dynamic="finding_description" data-i18n-value="{{ finding.description }}">{{ finding.description }}</p></div><span class="severity-badge" data-i18n-dynamic="severity" data-i18n-value="{{ finding.severity }}">{{ finding.severity|title }}</span></div>
+              <div class="finding-meta"><span>{{ finding.rule_code }}</span>{% if finding.supplier_name %}<span>{{ finding.supplier_name }}</span>{% elif finding.evidence_json and finding.evidence_json.external_transaction_ids %}<span>{{ finding.evidence_json.external_transaction_ids|join(', ') }}</span>{% endif %}{% if finding.estimated_impact is not none %}<span>S/ {{ '%.2f'|format(finding.estimated_impact) }}</span>{% endif %}<button type="button" class="detail-button js-finding-detail" data-finding-id="{{ finding.id }}" data-i18n="result.view_details">View Details</button></div>
+            </article>
+          {% endfor %}
+          </div>{% else %}<p class="no-errors" data-i18n="result.no_findings">No anomalies were detected by the active rules.</p>{% endif %}
+        </section>
+      </section>
+    </main>
+    <footer><a href="/docs" data-i18n="footer.api">API Documentation</a><span>{{ environment }}</span></footer>
+  </div>
+</div>
+{% include "_finding_modal.html" %}
+{% endblock %}

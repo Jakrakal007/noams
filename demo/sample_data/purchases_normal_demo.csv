@@ -1,0 +1,2 @@
+transaction_id,transaction_date,supplier_name,department,category,quantity,unit_price,total_amount,approval_status,purchase_order,budget_amount,currency
+NORMAL-001,2026-01-15,FICTIONAL-DEMO-CLOUD-002,Demo Operations,Demo Materials,1,320,320,approved,DEMO-PO-NORMAL-001,,PEN

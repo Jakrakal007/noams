@@ -1,0 +1,33 @@
+<dialog class="settings-modal" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+  <div class="settings-panel">
+    <header class="settings-header">
+      <h2 id="settings-title" data-i18n="settings.title">Settings</h2>
+      <button class="settings-close" type="button" data-settings-close aria-label="Close" data-i18n-aria-label="common.close">&times;</button>
+    </header>
+    <div class="settings-layout">
+      <nav class="settings-nav" aria-label="Settings sections" data-i18n-aria-label="settings.sections">
+        <button class="settings-nav-item active" type="button" aria-current="page" data-i18n="settings.general">General</button>
+      </nav>
+      <section class="settings-content" aria-labelledby="settings-general-title">
+        <div class="settings-section-heading">
+          <p class="eyebrow" data-i18n="settings.preferences">Preferences</p>
+          <h3 id="settings-general-title" data-i18n="settings.general">General</h3>
+        </div>
+        <div class="setting-row">
+          <div><label for="theme-select" data-i18n="settings.appearance">Appearance</label><p data-i18n="settings.appearance_help">Choose how NOAMS looks on this device.</p></div>
+          <select id="theme-select" aria-label="Appearance" data-i18n-aria-label="settings.appearance">
+            <option value="dark" data-i18n="settings.dark">Dark</option>
+            <option value="light" data-i18n="settings.light">Light</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div><label for="language-select" data-i18n="settings.language">Language</label><p data-i18n="settings.language_help">Choose the interface language for this device.</p></div>
+          <select id="language-select" aria-label="Language" data-i18n-aria-label="settings.language">
+            <option value="en" data-i18n="settings.english">English</option>
+            <option value="es" data-i18n="settings.spanish">Spanish</option>
+          </select>
+        </div>
+      </section>
+    </div>
+  </div>
+</dialog>

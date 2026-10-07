@@ -1,0 +1,4 @@
+transaction_id,transaction_date,supplier_name,department,category,quantity,unit_price,total_amount,approval_status,purchase_order,budget_amount,currency
+HIST-1,2026-01-05,FICTIONAL-DEMO-ORBIT-001,Demo Operations,Demo Materials,1,900,900,approved,DEMO-PO-HIST-1,,PEN
+HIST-2,2026-01-10,FICTIONAL-DEMO-ORBIT-001,Demo Operations,Demo Materials,1,1000,1000,approved,DEMO-PO-HIST-2,,PEN
+HIST-3,2026-01-15,FICTIONAL-DEMO-ORBIT-001,Demo Operations,Demo Materials,1,1100,1100,approved,DEMO-PO-HIST-3,,PEN

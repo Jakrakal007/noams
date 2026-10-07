@@ -1,0 +1,9 @@
+transaction_id,transaction_date,supplier_name,department,category,quantity,unit_price,total_amount,approval_status,purchase_order,budget_amount,currency
+DUP-001,2026-01-15,FICTIONAL-DEMO-PRISM-003,Demo Operations,Demo Materials,1,800,800,approved,DEMO-DUP-PO,,PEN
+DUP-002,2026-01-15,FICTIONAL-DEMO-PRISM-003,Demo Operations,Demo Materials,1,800,800,approved,DEMO-DUP-PO,,PEN
+UNUSUAL-001,2026-01-15,FICTIONAL-DEMO-ORBIT-001,Demo Operations,Demo Materials,1,5000,5000,approved,DEMO-PO-UNUSUAL-001,,PEN
+BUDGET-001,2026-01-15,FICTIONAL-DEMO-CUBE-004,Demo Operations,Demo Materials,1,1500,1500,approved,DEMO-PO-BUDGET-001,1000,PEN
+APPROVAL-001,2026-01-15,FICTIONAL-DEMO-LUMEN-005,Demo Operations,Demo Materials,1,12000,12000,rejected,DEMO-PO-APPROVAL-001,,PEN
+SPLIT-001,2026-01-20,FICTIONAL-DEMO-ARC-006,Demo Operations,Demo Materials,1,2600,2600,approved,DEMO-PO-SPLIT-001,,PEN
+SPLIT-002,2026-01-22,FICTIONAL-DEMO-ARC-006,Demo Operations,Demo Materials,1,2500,2500,approved,DEMO-PO-SPLIT-002,,PEN
+NORMAL-001,2026-01-15,FICTIONAL-DEMO-CLOUD-002,Demo Operations,Demo Materials,1,320,320,approved,DEMO-PO-NORMAL-001,,PEN

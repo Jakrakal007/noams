@@ -1,0 +1,3 @@
+transaction_id,transaction_date,supplier_name,department,category,quantity,unit_price,total_amount,approval_status,purchase_order,budget_amount,currency
+VALID-001,2026-01-15,FICTIONAL-DEMO-FLUX-007,Demo Operations,Demo Materials,1,75,75,approved,DEMO-PO-VALID-001,,PEN
+INVALID-001,invalid-date,FICTIONAL-DEMO-FLUX-007,Demo Operations,Demo Materials,0,-20,-20,approved,DEMO-PO-INVALID-001,,PEN

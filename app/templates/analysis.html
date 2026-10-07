@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Analysis | {{ app_name }}{% endblock %}
+{% block content %}
+<div class="app-shell">
+  {% include "_sidebar.html" %}
+  <div class="workspace">
+    <header class="topbar">
+      <div><span class="workspace-title" data-i18n="top.operations">Operations Center</span><p data-i18n="top.monitoring">Risk &amp; Anomaly Monitoring</p></div>
+      <div class="system-status"><span></span><span data-i18n="top.operational">System operational</span></div>
+    </header>
+    <main class="dashboard-main analysis-page">
+      <section class="page-heading">
+        <div><p class="eyebrow" data-i18n="history.eyebrow">Analysis history</p><h1 data-i18n="history.title">Analysis</h1><p data-i18n="history.subtitle">Review and manage processed analysis runs</p></div>
+        <a class="primary-button button-link" href="/#upload" data-i18n="dashboard.new_analysis">New Analysis</a>
+      </section>
+
+      <form class="history-filters" method="get" action="/analysis">
+        <label><span data-i18n="history.search_label">Search by filename</span><input type="search" name="filename" value="{{ filename_filter }}" placeholder="Search files" data-i18n-placeholder="history.search_placeholder"></label>
+        <label><span data-i18n="common.status">Status</span><select name="status">
+          <option value="" data-i18n="history.all_statuses">All statuses</option>
+          <option value="completed"{% if status_filter == 'completed' %} selected{% endif %} data-i18n="status.completed">Completed</option>
+          <option value="completed_with_findings"{% if status_filter == 'completed_with_findings' %} selected{% endif %} data-i18n="status.completed_with_findings">Completed With Findings</option>
+          <option value="failed"{% if status_filter == 'failed' %} selected{% endif %} data-i18n="status.failed">Failed</option>
+        </select></label>
+        <button class="secondary-button" type="submit" data-i18n="history.apply">Apply Filters</button>
+      </form>
+
+      <section class="history-card">
+        <div class="table-wrap history-table-wrap">
+          <table class="history-table">
+            <thead><tr><th data-i18n="common.file">File</th><th data-i18n="common.date_time">Date and time</th><th data-i18n="common.status">Status</th><th data-i18n="common.records">Records</th><th data-i18n="common.valid">Valid</th><th data-i18n="common.invalid">Invalid</th><th data-i18n="history.findings">Findings</th><th data-i18n="history.processing">Processing time</th><th data-i18n="common.action">Action</th></tr></thead>
+            <tbody>
+            {% for item in analyses %}
+              <tr data-analysis-row="{{ item.id }}">
+                <td class="history-file-cell"><a class="file-link" href="/analysis/{{ item.id }}">{{ item.filename }}</a>{% if item.is_updated %} <span class="history-updated" data-i18n="history.updated">(Updated)</span>{% endif %}<small>{{ item.source_type|upper }}</small><button class="analysis-delete-button" type="button" data-analysis-id="{{ item.id }}" data-analysis-filename="{{ item.filename }}" aria-label="Delete {{ item.filename }}" title="Delete analysis">&times;</button></td>
+                <td>{{ item.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td><span class="history-status history-status-{{ item.status }}" data-i18n-dynamic="status" data-i18n-value="{{ item.status }}">{{ item.status.replace('_', ' ')|title }}</span></td>
+                <td>{{ item.total_records }}</td><td>{{ item.valid_records }}</td><td>{{ item.invalid_records }}</td><td>{{ item.findings_count }}</td>
+                <td>{{ item.processing_time_ms }} ms</td>
+                <td><a class="table-action" href="/analysis/{{ item.id }}" data-i18n="history.view">View Summary</a></td>
+              </tr>
+            {% else %}
+              <tr><td class="history-empty" colspan="9" data-i18n="history.empty">No analysis runs match the selected filters.</td></tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <dialog class="analysis-delete-modal" id="analysis-delete-modal" aria-labelledby="analysis-delete-title">
+      <div class="analysis-delete-dialog">
+        <div class="modal-heading">
+          <div><p class="eyebrow">Permanent action</p><h2 id="analysis-delete-title">Delete analysis?</h2></div>
+          <button class="icon-button" id="close-analysis-delete" type="button" aria-label="Close">&times;</button>
+        </div>
+        <p class="analysis-delete-filename" id="analysis-delete-filename"></p>
+        <p class="analysis-delete-copy">Are you sure you want to delete this analysis? This action will permanently delete this execution and all associated data.</p>
+        <p class="form-error" id="analysis-delete-error" role="alert" hidden></p>
+        <div class="modal-actions">
+          <button class="secondary-button" id="cancel-analysis-delete" type="button">Cancel</button>
+          <button class="analysis-delete-confirm" id="confirm-analysis-delete" type="button">Yes, delete</button>
+        </div>
+      </div>
+    </dialog>
+    <footer><a href="/docs" data-i18n="footer.api">API Documentation</a><span>{{ environment }}</span></footer>
+  </div>
+</div>
+{% endblock %}

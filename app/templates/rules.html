@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Rules | {{ app_name }}{% endblock %}
+{% block content %}
+{% set active_count = rules|selectattr('enabled')|list|length %}
+<div class="app-shell" id="rules-app">
+  {% include "_sidebar.html" %}
+  <div class="workspace">
+    <header class="topbar">
+      <div><span class="workspace-title" data-i18n="top.operations">Operations Center</span><p data-i18n="top.monitoring">Risk &amp; Anomaly Monitoring</p></div>
+      <div class="system-status"><span></span><span data-i18n="top.operational">System operational</span></div>
+    </header>
+    <main class="dashboard-main rules-page">
+      <section class="page-heading">
+        <div><p class="eyebrow" data-i18n="rules.eyebrow">Detection controls</p><h1 data-i18n="rules.title">Rules</h1><p data-i18n="rules.subtitle">Configure the controls used by the NOAMS detection engine.</p></div>
+      </section>
+      <section class="rules-summary" aria-label="Rule summary" data-i18n-aria-label="rules.summary_label">
+        <article><span data-i18n="rules.total">Total rules</span><strong id="rules-total">{{ rules|length }}</strong></article>
+        <article><span data-i18n="rules.active">Active rules</span><strong id="rules-active">{{ active_count }}</strong></article>
+        <article><span data-i18n="rules.disabled">Disabled rules</span><strong id="rules-disabled">{{ rules|length - active_count }}</strong></article>
+        <article><span data-i18n="rules.last_status">Last execution status</span><strong id="rules-last-status" data-i18n-dynamic="status" data-i18n-value="{{ (rules|selectattr('statistics.last_status')|map(attribute='statistics.last_status')|list|first) or 'not_run' }}">Not run</strong></article>
+      </section>
+      <section class="rules-grid" id="rules-grid">
+        {% for rule in rules %}
+        <article class="rule-card" data-rule-code="{{ rule.rule_code }}">
+          <div class="rule-card-heading"><div><h2 data-i18n="rule.{{ rule.rule_code }}.name">{{ rule.display_name }}</h2><code>{{ rule.rule_code }}</code></div><span class="rule-state {{ 'active' if rule.enabled else 'disabled' }}" data-rule-state data-i18n="{{ 'rules.enabled' if rule.enabled else 'rules.disabled_state' }}">{{ 'Enabled' if rule.enabled else 'Disabled' }}</span></div>
+          <p class="rule-description" data-i18n="rule.{{ rule.rule_code }}.description">{{ rule.description }}</p>
+          <dl class="rule-metadata">
+            <div><dt data-i18n="rules.category">Category</dt><dd data-i18n="rule.{{ rule.rule_code }}.category">{{ rule.category }}</dd></div>
+            <div><dt data-i18n="rules.type">Detection type</dt><dd data-i18n="rule.{{ rule.rule_code }}.type">{{ rule.detection_type }}</dd></div>
+            <div><dt data-i18n="rules.version">Version</dt><dd>{{ rule.version }}</dd></div>
+          </dl>
+          <div class="configuration-summary"><span data-i18n="rules.current_configuration">Current configuration</span><div data-rule-config>
+            {% if rule.configuration %}{% for key, value in rule.configuration.items() %}<small><b data-i18n="rules.field.{{ key }}">{{ key.replace('_', ' ')|title }}</b>: {{ value }}</small>{% endfor %}{% else %}<small data-i18n="rules.fixed_logic">Fixed matching logic; no editable thresholds.</small>{% endif %}
+          </div></div>
+          <div class="rule-statistics"><div><span data-i18n="rules.executions">Executions</span><strong data-stat="executions">{{ rule.statistics.total_executions }}</strong></div><div><span data-i18n="rules.findings">Findings</span><strong data-stat="findings">{{ rule.statistics.total_findings }}</strong></div><div><span data-i18n="rules.last_run">Last run</span><strong data-stat="status" data-i18n-dynamic="status" data-i18n-value="{{ rule.statistics.last_status or 'not_run' }}">{{ rule.statistics.last_status or 'Not run' }}</strong></div></div>
+          <small class="rule-updated"><span data-i18n="rules.updated">Updated</span>: <time data-rule-updated datetime="{{ rule.updated_at.isoformat() }}">{{ rule.updated_at.strftime('%Y-%m-%d %H:%M') }}</time></small>
+          <button class="secondary-button rule-configure" type="button" data-configure-rule="{{ rule.rule_code }}" data-i18n="rules.configure">Configure</button>
+        </article>
+        {% endfor %}
+      </section>
+    </main>
+    <footer><a href="/docs" data-i18n="footer.api">API Documentation</a><span>{{ environment }}</span></footer>
+  </div>
+</div>
+<dialog class="rule-modal" id="rule-modal" aria-labelledby="rule-modal-title">
+  <form class="rule-modal-panel" id="rule-form" novalidate>
+    <header class="rule-modal-heading"><div><p class="eyebrow" data-i18n="rules.configuration">Rule configuration</p><h2 id="rule-modal-title"></h2><code id="rule-modal-code"></code></div><button class="icon-button" type="button" id="rule-close" aria-label="Close" data-i18n-aria-label="common.close">&times;</button></header>
+    <div class="rule-toggle-row"><div><strong data-i18n="rules.rule_enabled">Rule enabled</strong><p data-i18n="rules.enabled_help">Disabled rules are skipped during analysis and recorded in the execution audit.</p><span class="rule-toggle-status" id="rule-toggle-status"></span></div><label class="rule-switch"><input type="checkbox" id="rule-enabled" role="switch" aria-checked="true"><span aria-hidden="true"></span></label></div>
+    <div id="rule-fields" class="rule-fields"></div>
+    <p class="rule-form-error" id="rule-form-error" hidden></p><p class="rule-form-success" id="rule-form-success" hidden></p>
+    <section class="rule-mini-guide" aria-labelledby="rule-guide-heading"><h3 id="rule-guide-heading" data-i18n="rules.guide_heading">How to interpret this rule</h3><p id="rule-guide-text"></p></section>
+    <div class="modal-actions"><button class="secondary-button" type="button" id="rule-cancel" data-i18n="common.cancel">Cancel</button><button class="secondary-button" type="button" id="rule-reset" data-i18n="rules.restore">Restore Defaults</button><button class="primary-button" type="submit" id="rule-save" data-i18n="rules.save">Save Changes</button></div>
+  </form>
+</dialog>
+<div class="rule-toast" id="rule-toast" role="status" aria-live="polite" hidden></div>
+{% endblock %}

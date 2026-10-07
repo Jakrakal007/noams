@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="app-shell">
+  {% include "_sidebar.html" %}
+
+  <div class="workspace">
+    <header class="topbar">
+      <div>
+        <span class="workspace-title" data-i18n="top.operations">Operations Center</span>
+        <p data-i18n="top.monitoring">Risk &amp; Anomaly Monitoring</p>
+      </div>
+
+      <div class="system-status">
+        <span></span>
+        <span data-i18n="top.operational">System operational</span>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+    <section class="operations-heading">
+      <div>
+        <h1 data-i18n="dashboard.welcome">Purchase Analysis</h1>
+        <p data-i18n="dashboard.subtitle">
+          Operations Center · Risk, Non-Compliance &amp; Anomaly Monitoring
+        </p>
+      </div>
+
+      <div class="operations-heading-status">
+        <span></span>
+        <span data-i18n="top.platform_active">Platform active</span>
+      </div>
+    </section>
+
+    <section class="analysis-launcher">
+      <div class="launcher-file-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M8 12h8M12 8v8"></path></svg>
+      </div>
+
+      <div class="launcher-copy">
+        <h2 data-i18n="dashboard.question">What would you like to analyze today?</h2>
+        <p data-i18n="dashboard.upload_help">Upload an Excel or CSV file containing your transactions.</p>
+
+        <div class="launcher-formats">
+          <span>CSV</span>
+          <span>XLSX</span>
+          <small data-i18n="dashboard.maximum">Maximum 10 MiB</small>
+        </div>
+      </div>
+
+      <div class="launcher-actions">
+        <button class="primary-button" id="open-upload" type="button">
+          <span data-i18n="dashboard.new_analysis">New Analysis</span>
+        </button>
+
+        <button class="launcher-example-button" type="button" data-i18n="dashboard.formats">
+          View supported formats
+        </button>
+      </div>
+    </section>
+
+    <section class="metrics" aria-label="Processing metrics" data-i18n-aria-label="dashboard.processing_metrics">
+      <article class="metric-card">
+        <span data-i18n="metric.analyses">Completed Analyses</span>
+        <strong id="analyses-count">{{ summary.analyses_count }}</strong>
+        <small data-i18n="metric.saved_runs">Saved runs</small>
+      </article>
+      <article class="metric-card">
+        <span data-i18n="metric.findings">Findings Detected</span>
+        <strong id="findings-count">{{ summary.findings_count }}</strong>
+        <small data-i18n="metric.rules">Deterministic rules</small>
+      </article>
+      <article class="metric-card">
+        <span data-i18n="metric.impact">Estimated Impact</span>
+        <strong id="estimated-impact">S/ {{ '%.2f'|format(summary.estimated_impact) }}</strong>
+        <small data-i18n="metric.exposure">Deduplicated open exposure</small>
+      </article>
+      <article class="metric-card compact-metric">
+        <span data-i18n="metric.records">Processed Records</span>
+        <strong id="records-processed">{{ summary.records_processed }}</strong>
+      </article>
+      <article class="metric-card compact-metric">
+        <span data-i18n="metric.critical">Critical Risks</span>
+        <strong id="critical-risks">{{ summary.critical_risks }}</strong>
+      </article>
+    </section>
+
+    <section class="result-card" id="analysis-result" hidden aria-live="polite">
+      <div class="result-heading">
+        <div>
+          <p class="eyebrow" data-i18n="result.completed">Processing completed</p>
+          <h2 data-i18n="result.summary">Run Summary</h2>
+        </div>
+        <span class="status-pill" id="result-status"></span>
+      </div>
+      <dl class="result-grid">
+        <div><dt data-i18n="common.file">File</dt><dd id="result-filename"></dd></div>
+        <div><dt data-i18n="common.records">Records</dt><dd id="result-total"></dd></div>
+        <div><dt data-i18n="common.valid">Valid</dt><dd id="result-valid"></dd></div>
+        <div><dt data-i18n="common.invalid">Invalid</dt><dd id="result-invalid"></dd></div>
+        <div><dt data-i18n="result.processing_time">Processing Time</dt><dd id="result-time"></dd></div>
+      </dl>
+      <div id="errors-section" hidden>
+        <h3 data-i18n="result.validation_errors">Validation Errors</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th data-i18n="common.row">Row</th><th data-i18n="common.column">Column</th><th data-i18n="common.description">Description</th></tr></thead>
+            <tbody id="errors-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <p class="no-errors" id="no-errors" hidden data-i18n="result.no_errors">No validation errors were found.</p>
+
+      <section class="findings-result" id="findings-result">
+        <div class="findings-title">
+          <div>
+            <p class="eyebrow" data-i18n="result.deterministic">Deterministic rules</p>
+            <h3 data-i18n="result.findings">Findings Detected</h3>
+          </div>
+          <strong id="findings-total">0</strong>
+        </div>
+        <p class="no-errors" id="no-findings" data-i18n="result.no_findings">No anomalies were detected by the active rules.</p>
+        <div class="findings-list" id="findings-list"></div>
+      </section>
+      <div class="saved-analysis-action">
+        <a class="secondary-button" id="view-saved-analysis" href="/analysis" hidden data-i18n="result.saved">View saved analysis</a>
+      </div>
+    </section>
+    </main>
+
+    <footer>
+      <a href="/docs" data-i18n="footer.api">API Documentation</a>
+      <span>{{ environment }}</span>
+    </footer>
+  </div>
+</div>
+
+<dialog class="upload-modal" id="upload-modal" aria-labelledby="modal-title">
+  <form id="upload-form" enctype="multipart/form-data">
+    <div class="modal-heading">
+      <div>
+        <p class="eyebrow" data-i18n="upload.new_run">New run</p>
+        <h2 id="modal-title" data-i18n="upload.title">New Analysis</h2>
+      </div>
+      <button class="icon-button" id="close-upload" type="button" aria-label="Close" data-i18n-aria-label="common.close">×</button>
+    </div>
+    <label class="file-drop" for="analysis-file">
+      <span class="file-icon" aria-hidden="true">↑</span>
+      <strong id="file-label" data-i18n="upload.file">Upload File</strong>
+      <small data-i18n="upload.supported">Supported formats: CSV or XLSX</small>
+      <input id="analysis-file" name="file" type="file" accept=".csv,.xlsx" required>
+    </label>
+    <p class="form-error" id="form-error" hidden role="alert"></p>
+    <div class="modal-actions">
+      <button class="secondary-button" id="cancel-upload" type="button" data-i18n="common.cancel">Cancel</button>
+      <button class="primary-button" id="process-upload" type="submit" data-i18n="upload.run">Run Analysis</button>
+    </div>
+  </form>
+</dialog>
+
+{% include "_finding_modal.html" %}
+{% endblock %}
